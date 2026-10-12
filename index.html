@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GrandStay Hotel Management</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f7f4fb;color:#302641}
+header{background:linear-gradient(120deg,#30213f,#8053a6,#e78da8);color:white;padding:25px;border-radius:0 0 25px 25px}
+header h1{margin:0;font-size:30px}
+header p{margin-bottom:0}
+nav{display:flex;gap:10px;flex-wrap:wrap;padding:18px}
+button{border:0;padding:11px 15px;border-radius:10px;background:#7655d9;color:white;cursor:pointer;font-weight:bold}
+button:hover{opacity:.85;transform:translateY(-1px)}
+nav button{background:#fff;color:#6544a0;box-shadow:0 3px 10px #0001}
+main{padding:18px;max-width:1200px;margin:auto}
+.page{display:none}.page.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px}
+.card,.panel{background:white;border-radius:17px;padding:20px;box-shadow:0 5px 20px #30213f0c;margin-bottom:16px}
+.card .emoji{font-size:30px}
+.card h2{margin:10px 0;color:#7655d9}
+h2,h3{margin-top:0}
+input,select{padding:11px;border:1px solid #ddd5e8;border-radius:9px;width:100%;margin:6px 0 13px}
+label{font-size:13px;font-weight:bold}
+.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+table{width:100%;border-collapse:collapse;min-width:600px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid #eee}
+th{background:#f3edfb;color:#6544a0}
+.tablewrap{overflow:auto}
+.purple{background:#7655d9}.pink{background:#e66d9a}.gold{background:#f0b74f;color:#382a40}.green{background:#279c7c}
+.small{font-size:12px;color:#898094}
+.badge{padding:5px 8px;background:#e3f8ee;color:#168365;border-radius:7px;font-size:11px}
+footer{text-align:center;color:#988da7;padding:25px}
+@media(max-width:600px){header h1{font-size:24px}main{padding:10px}nav{padding:10px}}
+</style>
+</head>
+<body>
+<header>
+<h1>🏨 GrandStay Hotel</h1>
+<p>✨ Smart Hotel Management Dashboard · Hospitality Made Simple</p>
+</header>
+<nav>
+<button onclick="show('dashboard')">🏠 Dashboard</button>
+<button onclick="show('rooms')">🛏️ Rooms</button>
+<button onclick="show('bookings')">📅 Bookings</button>
+<button onclick="show('guests')">👥 Guests</button>
+<button onclick="show('billing')">💳 Billing</button>
+<button onclick="show('restaurant')">🍽️ Restaurant</button>
+<button onclick="show('housekeeping')">🧹 Housekeeping</button>
+<button onclick="show('reports')">📊 Reports</button>
+</nav>
+<main>
+<section class="page active" id="dashboard">
+<div class="panel" style="background:linear-gradient(120deg,#fff,#f0e6ff)">
+<h2>Good day, Hotel Manager! ✨</h2>
+<p>Manage your rooms, guests, reservations and services from one place.</p>
+<button onclick="show('bookings')">＋ New Booking</button>
+<button class="gold" onclick="show('rooms')">🛏️ Manage Rooms</button>
+</div>
+<div class="cards">
+<div class="card"><div class="emoji">🛏️</div>Total Rooms<h2 id="totalRooms">4</h2><span class="small">Your hotel inventory</span></div>
+<div class="card"><div class="emoji">🔑</div>Occupied<h2 id="occupied">1</h2><span class="small">Rooms in use</span></div>
+<div class="card"><div class="emoji">🌿</div>Available<h2 id="available">3</h2><span class="small">Ready for guests</span></div>
+<div class="card"><div class="emoji">💰</div>Recorded Revenue<h2 id="revenue">₹0</h2><span class="small">From saved bills</span></div>
+</div>
+<div class="panel"><h3>🌟 GrandStay Services</h3><div class="cards">
+<div class="card">🛎️ <b>24/7 Reception</b><p class="small">Guest support and assistance</p></div>
+<div class="card">🍛 <b>Restaurant</b><p class="small">Food and room service orders</p></div>
+<div class="card">🧹 <b>Housekeeping</b><p class="small">Track room cleaning status</p></div>
+</div></div>
+</section>
+
+<section class="page" id="rooms">
+<div class="panel"><h2>🛏️ Room Management</h2>
+<form id="roomForm" class="formgrid">
+<div><label>Room Number</label><input id="roomNo" required placeholder="e.g. 105"></div>
+<div><label>Room Type</label><select id="roomType"><option>Standard</option><option>Deluxe</option><option>Suite</option><option>Family</option></select></div>
+<div><label>Price per Night (₹)</label><input id="roomPrice" type="number" min="1" required placeholder="1500"></div>
+<div><label>Status</label><select id="roomStatus"><option>Available</option><option>Occupied</option><option>Cleaning</option><option>Maintenance</option></select></div>
+<div><button>＋ Add Room</button></div>
+</form></div>
+<div class="panel tablewrap"><table><thead><tr><th>Room</th><th>Type</th><th>Price/Night</th><th>Status</th><th>Action</th></tr></thead><tbody id="roomTable"></tbody></table></div>
+</section>
+
+<section class="page" id="bookings">
+<div class="panel"><h2>📅 Guest Booking</h2>
+<form id="bookingForm" class="formgrid">
+<div><label>Guest Name</label><input id="guestName" required placeholder="Full name"></div>
+<div><label>Phone Number</label><input id="guestPhone" required placeholder="Phone number"></div>
+<div><label>Email</label><input id="guestEmail" type="email" placeholder="guest@email.com"></div>
+<div><label>Room</label><select id="bookingRoom"></select></div>
+<div><label>Check-in</label><input id="checkin" type="date" required></div>
+<div><label>Check-out</label><input id="checkout" type="date" required></div>
+<div><button>✓ Save Booking</button></div>
+</form></div>
+<div class="panel tablewrap"><table><thead><tr><th>ID</th><th>Guest</th><th>Phone</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody id="bookingTable"></tbody></table></div>
+</section>
+
+<section class="page" id="guests">
+<div class="panel"><h2>👥 Guest Directory</h2><input id="guestSearch" placeholder="🔎 Search guests..." oninput="renderGuests()">
+<div class="tablewrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Room</th><th>Booking Status</th></tr></thead><tbody id="guestTable"></tbody></table></div></div>
+</section>
+
+<section class="page" id="billing">
+<div class="panel"><h2>💳 Billing & Invoices</h2>
+<label>Select Booking</label><select id="billBooking"></select>
+<label>Extra Service Charges (₹)</label><input id="extraCharge" type="number" min="0" value="0">
+<label>Discount (₹)</label><input id="discount" type="number" min="0" value="0">
+<button onclick="createBill()">🧾 Calculate Bill</button>
+<button class="gold" onclick="window.print()">🖨️ Print Bill</button>
+<div id="billOutput" style="margin-top:20px"></div>
+</div>
+</section>
+
+<section class="page" id="restaurant">
+<div class="panel"><h2>🍽️ Restaurant & Room Service</h2>
+<div class="cards">
+<div class="card">🍛 <h3>Indian Thali</h3><b>₹220</b><p><button onclick="food('Indian Thali',220)">Add Order</button></p></div>
+<div class="card">🍕 <h3>Pizza</h3><b>₹320</b><p><button onclick="food('Pizza',320)">Add Order</button></p></div>
+<div class="card">☕ <h3>Coffee / Tea</h3><b>₹60</b><p><button onclick="food('Coffee / Tea',60)">Add Order</button></p></div>
+<div class="card">🥗 <h3>Fresh Salad</h3><b>₹160</b><p><button onclick="food('Fresh Salad',160)">Add Order</button></p></div>
+</div>
+<p id="foodMessage" class="small">Choose a food item to record an order.</p>
+<div class="tablewrap"><table><thead><tr><th>Order</th><th>Item</th><th>Amount</th><th>Date</th></tr></thead><tbody id="foodTable"></tbody></table></div>
+</div>
+</section>
+
+<section class="page" id="housekeeping">
+<div class="panel"><h2>🧹 Housekeeping Board</h2><p class="small">Change a room status after cleaning or maintenance.</p>
+<div class="tablewrap"><table><thead><tr><th>Room</th><th>Type</th><th>Current Status</th><th>Update</th></tr></thead><tbody id="houseTable"></tbody></table></div>
+</div></section>
+
+<section class="page" id="reports">
+<div class="panel"><h2>📊 Hotel Reports</h2><div class="cards">
+<div class="card">📅 Total Bookings<h2 id="reportBookings">0</h2></div>
+<div class="card">💰 Total Bills<h2 id="reportRevenue">₹0</h2></div>
+<div class="card">🍽️ Food Orders<h2 id="reportFood">0</h2></div>
+<div class="card">👥 Guest Records<h2 id="reportGuests">0</h2></div>
+</div><button onclick="exportBookings()">⬇️ Download Booking CSV</button></div>
+</section>
+<footer>🏨 GrandStay Hotel Management · Designed for easy hotel operations ✨</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const load=(k,d)=>{try{return JSON.parse(localStorage.getItem('gs_'+k))||d}catch{return d}};
+let rooms=load('rooms',[
+{id:'101',type:'Deluxe',price:2200,status:'Available'},
+{id:'102',type:'Standard',price:1500,status:'Occupied'},
+{id:'103',type:'Suite',price:4200,status:'Available'},
+{id:'104',type:'Family',price:3200,status:'Available'}
+]);
+let bookings=load('bookings',[]),foods=load('foods',[]),bills=load('bills',[]);
+function save(){localStorage.setItem('gs_rooms',JSON.stringify(rooms));localStorage.setItem('gs_bookings',JSON.stringify(bookings));localStorage.setItem('gs_foods',JSON.stringify(foods));localStorage.setItem('gs_bills',JSON.stringify(bills));render()}
+function money(n){return '₹'+Number(n||0).toLocaleString('en-IN')}
+function show(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');render()}
+function renderRooms(){$('roomTable').innerHTML=rooms.map((r,i)=>`<tr><td><b>${r.id}</b></td><td>${r.type}</td><td>${money(r.price)}</td><td><span class="badge">${r.status}</span></td><td><button class="pink" onclick="deleteRoom(${i})">Delete</button></td></tr>`).join('');$('bookingRoom').innerHTML=rooms.filter(r=>r.status==='Available').map(r=>`<option value="${r.id}">${r.id} - ${r.type} (${money(r.price)})</option>`).join('');$('billBooking').innerHTML=bookings.map(b=>`<option value="${b.id}">${b.name} - Room ${b.room}</option>`).join('')}
+function deleteRoom(i){if(confirm('Delete this room?')){rooms.splice(i,1);save()}}
+$('roomForm').onsubmit=e=>{e.preventDefault();let id=$('roomNo').value.trim();if(rooms.some(r=>r.id===id)){alert('Room number already exists');return}rooms.push({id,type:$('roomType').value,price:+$('roomPrice').value,status:$('roomStatus').value});e.target.reset();save();alert('Room added successfully!')};
+$('bookingForm').onsubmit=e=>{e.preventDefault();let room=rooms.find(r=>r.id===$('bookingRoom').value);if(!room){alert('Please add an available room first');return}let start=$('checkin').value,end=$('checkout').value,days=Math.ceil((new Date(end)-new Date(start))/86400000);if(days<1){alert('Check-out must be after check-in');return}if(bookings.some(b=>b.room===room.id&&b.status!=='Cancelled'&&!(end<=b.in||start>=b.out))){alert('Room is already booked for those dates');return}bookings.unshift({id:'BK'+Date.now().toString().slice(-6),name:$('guestName').value,phone:$('guestPhone').value,email:$('guestEmail').value,room:room.id,in:start,out:end,amount:days*room.price,status:'Confirmed'});e.target.reset();save();alert('Booking saved!')};
+function cancelBooking(id){let b=bookings.find(b=>b.id===id);if(b)b.status='Cancelled';save()}
+function renderBookings(){$('bookingTable').innerHTML=bookings.map(b=>`<tr><td>${b.id}</td><td>${b.name}</td><td>${b.phone}</td><td>${b.room}</td><td>${b.in}</td><td>${b.out}</td><td>${money(b.amount)}</td><td>${b.status}</td><td><button class="pink" onclick="cancelBooking('${b.id}')">Cancel</button></td></tr>`).join('')||'<tr><td colspan="9">No bookings yet.</td></tr>'}
+function renderGuests(){let q=($('guestSearch').value||'').toLowerCase();$('guestTable').innerHTML=bookings.filter(b=>(b.name+b.phone+b.email).toLowerCase().includes(q)).map(b=>`<tr><td>${b.name}</td><td>${b.phone}</td><td>${b.email||'—'}</td><td>${b.room}</td><td>${b.status}</td></tr>`).join('')||'<tr><td colspan="5">No guests found.</td></tr>'}
+function food(item,price){foods.unshift({id:'FD'+Date.now().toString().slice(-5),item,price,date:new Date().toLocaleDateString()});save();$('foodMessage').textContent='✅ '+item+' order added. Add food charges manually to a bill if needed.'}
+function renderFood(){$('foodTable').innerHTML=foods.map(f=>`<tr><td>${f.id}</td><td>${f.item}</td><td>${money(f.price)}</td><td>${f.date}</td></tr>`).join('')||'<tr><td colspan="4">No food orders yet.</td></tr>'}
+function createBill(){let b=bookings.find(b=>b.id===$('billBooking').value);if(!b){alert('Create a booking first');return}let extra=+$('extraCharge').value,discount=+$('discount').value,subtotal=b.amount+extra,total=Math.max(0,subtotal-discount),bill={id:'IN'+Date.now().toString().slice(-6),name:b.name,room:b.room,subtotal,extra,discount,total,date:new Date().toLocaleDateString()};bills.unshift(bill);save();$('billOutput').innerHTML=`<div class="panel"><h2>🏨 GrandStay Hotel</h2><p>Invoice: ${bill.id}</p><p>Guest: ${bill.name} · Room ${bill.room}</p><hr><p>Room charges: <b>${money(b.amount)}</b></p><p>Extra services: <b>${money(extra)}</b></p><p>Discount: <b>${money(discount)}</b></p><h2>Total: ${money(total)}</h2><p>Thank you for staying with us! ✨</p></div>`}
+function render(){renderRooms();renderBookings();renderGuests();renderFood();renderHouse();$('totalRooms').textContent=rooms.length;$('occupied').textContent=rooms.filter(r=>r.status==='Occupied').length;$('available').textContent=rooms.filter(r=>r.status==='Available').length;$('revenue').textContent=money(bills.reduce((s,b)=>s+b.total,0));$('reportBookings').textContent=bookings.length;$('reportRevenue').textContent=money(bills.reduce((s,b)=>s+b.total,0));$('reportFood').textContent=foods.length;$('reportGuests').textContent=new Set(bookings.map(b=>b.name)).size}
+function renderHouse(){$('houseTable').innerHTML=rooms.map(r=>`<tr><td>${r.id}</td><td>${r.type}</td><td>${r.status}</td><td><select onchange="changeStatus('${r.id}',this.value)">${['Available','Occupied','Cleaning','Maintenance'].map(s=>`<option ${s===r.status?'selected':''}>${s}</option>`).join('')}</select></td></tr>`).join('')||'<tr><td colspan="4">No rooms yet.</td></tr>'}
+function changeStatus(id,status){let r=rooms.find(r=>r.id===id);if(r){r.status=status;save()}}
+function exportBookings(){let data=[['ID','Guest','Phone','Email','Room','Check-in','Check-out','Amount','Status'],...bookings.map(b=>[b.id,b.name,b.phone,b.email,b.room,b.in,b.out,b.amount,b.status])];let csv=data.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='grandstay-bookings.csv';a.click();URL.revokeObjectURL(a.href)}
+render();
+</script>
+</body>
+</html>
